@@ -1,26 +1,22 @@
 
 
-microsoftStreamUsername="lap170@student.aru.ac.uk"
-
-
 # Download the Microsoft Stream Video
 function_videoIsMSStream () {
 
+    # Destreamer Directory.
+    destreamerDir="/Users/$(whoami)/destreamer"
+
     # Check if Destreamer is installed.
-    [[ -f ~/destreamer/destreamer.sh ]] || { printf "Destreamer is not installed\nVisit: https://github.com/snobu/destreamer\n" ; exit 1 ; }
+    [[ -f "$destreamerDir/destreamer.sh" ]] || { printf "Destreamer is not installed\nVisit: https://github.com/snobu/destreamer\n" ; exit 1 ; }
 
     # Remove End of the Line
-    editedLine=$(echo $Line | rev | cut -d? -f2 | rev)
+    editedURL=$(echo $videoURL | rev | cut -d? -f2 | rev)
 
     # Run Destreamer
-    cd ~/destreamer
-    ./destreamer.sh -u $microsoftStreamUsername -i $editedLine --format mp4 -cc true -o "$destinationDirectory"
+    cd "$destreamerDir"
+    ./destreamer.sh -u $microsoftStreamUsername -i $editedURL --format mp4 -cc true -o "$downloadsFolder"
 
-    echo
-    echo Download in progress...
-
-    # Back to Current Directory
-    cd "$destinationDirectory"
+    exit 0
 }
 
 
@@ -33,9 +29,9 @@ function_videoIsYoutube () {
     # Get video title and format it.
     videoTitle=$(/opt/homebrew/bin/youtube-dl -f bestvideo+bestaudio "$videoURL" -o "%(title)s.%(ext)s" --get-title)
     videoTitle=$(echo $videoTitle | sed 's/["/]//g')
+    videoTitle=$(echo $videoTitle | sed "s/[']//g")
 
     # Set videoDownload Directory.
-    downloadsFolder="/Users/$(whoami)/Downloads"
     videoDirectory="$downloadsFolder/$videoTitle"
 
     # Download the youtube video.
@@ -88,7 +84,8 @@ if [ $# -eq 0 ]; then
 	done
 else
     # We do have a parameter supplied:
-    videoURL="$1"
+    microsoftStreamUsername="$1"
+    videoURL="$2"
     # If the input is a YouTube link, then continue, else exit.
     if [[ "$videoURL" != *"youtu.be"* ]] | [[ "$videoURL" != *"youtube.com"* ]] | [[ "$videoURL" != *"web.microsoftstream.com"* ]]; then
         echo
@@ -96,6 +93,10 @@ else
         exit 1
     fi
 fi
+
+
+# Some variables, once we know we can continue ahead.
+downloadsFolder="/Users/$(whoami)/Downloads"
 
 
 # IF contains a Microsoft Stream Domain, then run MS Function
