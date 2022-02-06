@@ -1,3 +1,7 @@
+#!/bin/bash
+
+
+echo Line1
 
 
 # Download the Microsoft Stream Video
@@ -65,7 +69,7 @@ function_videoIsYoutube () {
 }
 
 
-
+echo after functions
 
 
 
@@ -101,6 +105,8 @@ fi
 
 # Some variables, once we know we can continue ahead.
 downloadsFolder="/Users/$(whoami)/Downloads"
+
+echo about to initialise
 
 
 # IF contains a Microsoft Stream Domain, then run MS Function
