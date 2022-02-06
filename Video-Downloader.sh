@@ -12,9 +12,13 @@ function_videoIsMSStream () {
     # Remove End of the Line
     editedURL=$(echo $videoURL | rev | cut -d? -f2 | rev)
 
+    echo Before
+
     # Run Destreamer
     cd "$destreamerDir"
-    ./destreamer.sh -u $microsoftStreamUsername -i $editedURL --format mp4 -cc true -o "$downloadsFolder"
+    ./destreamer.sh -u $microsoftStreamUsername -k -i $editedURL --format mp4 -cc true -o "$downloadsFolder"
+
+    echo After
 
     exit 0
 }
